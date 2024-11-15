@@ -18,7 +18,6 @@ const createUser = async (req, res, next) => {
 
 const login = async (req, res) => {
   const { username, password } = req.body;
-  // change to database retrieve
   const user = await db.getUser(username);
   const match = await bcrypt.compare(password, user.password);
   if (match) {
