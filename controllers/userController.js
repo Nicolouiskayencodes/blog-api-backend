@@ -9,7 +9,7 @@ const createUser = async (req, res, next) => {
     }
     try {
       await db.createUser(req.body.username, hashedPassword)
-      return res.status(200).json({message: "User created"}).redirect('/')
+      return res.status(200).json({message: "User created"})
     } catch(err) {
       return next(err);
     }
@@ -19,6 +19,9 @@ const createUser = async (req, res, next) => {
 const login = async (req, res) => {
   const { username, password } = req.body;
   const user = await db.getUser(username);
+  if (!user) {
+    return res.status(404).json({message: "User not found"})
+  }
   const match = await bcrypt.compare(password, user.password);
   if (match) {
     const token = jwt.sign(user, process.env.JWT_KEY, { expiresIn: '24h' }) 
