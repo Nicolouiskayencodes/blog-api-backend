@@ -18,5 +18,47 @@ async function getUser(username) {
   return user;
 }
 
+async function getPosts() {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+      comments: {
+        include: {
+          author :{
+            select: {
+              username: true,
+            },
+          },
+        },
+      },
+    },
+  })
+  return posts
+}
 
-module.exports = {createUser, getUser}
+async function postPost(authorId, title, content) {
+  await prisma.post.create({
+    data: {
+      authorId: authorId,
+      title: title,
+      content: content,
+    }
+  })
+}
+
+async function grantAdmin(id) {
+  await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      admin: true,
+    }
+  })
+}
+
+module.exports = {createUser, getUser, getPosts, postPost, grantAdmin}

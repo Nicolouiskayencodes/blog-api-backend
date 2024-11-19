@@ -4,12 +4,12 @@ const controller= require('../controllers')
 
 const authenticate = passport.authenticate('jwt', { session: false })
 
-router.get("/", controller.postController.indexRoute)
-
-router.post('/register', controller.userController.createUser)
-
+router.get("/", controller.postController.indexRoute);
+router.post("/register", controller.userController.createUser);
 router.post("/login", controller.userController.login);
-
-router.get("/protected", authenticate, controller.postController.protectedRoute)
+router.get("/protected", authenticate, controller.postController.protectedRoute);
+router.get("/posts", controller.postController.getPosts);
+router.post("/post", authenticate, controller.postController.postPost)
+router.put("/admin", authenticate, controller.userController.grantAdmin)
 
 module.exports = router;

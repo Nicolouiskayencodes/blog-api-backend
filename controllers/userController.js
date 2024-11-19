@@ -21,7 +21,7 @@ const login = async (req, res) => {
   const user = await db.getUser(username);
   const match = await bcrypt.compare(password, user.password);
   if (match) {
-    const token = jwt.sign(user, process.env.JWT_KEY, { expiresIn: '5m' }) 
+    const token = jwt.sign(user, process.env.JWT_KEY, { expiresIn: '24h' }) 
 
     return( res.status(200).json({
       message: "Auth Passed",
@@ -33,4 +33,13 @@ const login = async (req, res) => {
   return res.status(401).json({ message: "Auth Failed" })
 };
 
-module.exports = {createUser, login}
+const grantAdmin = async (req, res) => {
+  if (req.body.adminPassword === process.env.ADMIN_PASSWORD) {
+    await db.grantAdmin(req.user.id)
+    return res.status(200).json({message: "You are now an admin"})
+  } else {
+    return res.status(403).json({message: "Not authorized"})
+  }
+}
+
+module.exports = {createUser, login, grantAdmin}
