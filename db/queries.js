@@ -18,8 +18,22 @@ async function getUser(username) {
   return user;
 }
 
+async function grantAdmin(id) {
+  await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      admin: true,
+    }
+  })
+}
+
 async function getPosts() {
   const posts = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
     include: {
       author: {
         select: {
@@ -50,15 +64,73 @@ async function postPost(authorId, title, content) {
   })
 }
 
-async function grantAdmin(id) {
-  await prisma.user.update({
+async function publishPost(id) {
+  await prisma.post.update({
     where: {
       id: id,
     },
     data: {
-      admin: true,
+      published: true,
     }
   })
 }
 
-module.exports = {createUser, getUser, getPosts, postPost, grantAdmin}
+async function deletePost(id) {
+  await prisma.post.delete({
+    where: {
+      id: id,
+    },
+  })
+}
+
+async function updatePost(id, title, content) {
+  await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data:{
+      title:title,
+      content: content,
+    },
+  })
+}
+
+async function createComment(postId, userId, content) {
+  await prisma.comment.create({
+    data: {
+      postId: postId,
+      authorId: userId,
+      content: content,
+    }
+  })
+}
+
+async function deleteComment(id) {
+  await prisma.comment.delete({
+    where: {
+      id: id,
+    },
+  })
+}
+
+async function updateComment(commentId, content) {
+  return await prisma.comment.update({
+    where: {
+      id: commentId,
+    },
+    data: {
+      content: content,
+    },
+  })
+}
+async function getComment(id) {
+  const comment = prisma.comment.findUnique({
+    where:{
+      id : id,
+    }
+  })
+  return(comment)
+}
+
+
+module.exports = {createUser, getUser, getPosts, postPost, grantAdmin, createComment, publishPost, deleteComment, deletePost, updateComment, updatePost, getComment}
