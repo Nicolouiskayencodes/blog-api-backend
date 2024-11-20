@@ -9,7 +9,7 @@ const protectedRoute = (req,res) => {
 }
 const getPosts = async (req, res) => {
   const posts = await db.getPosts();
-  return res.json({posts:posts})
+  return res.json(posts)
 }
 const postPost = async (req, res) => {
   if (req.user.admin){
