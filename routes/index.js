@@ -20,5 +20,6 @@ router.delete("/comment/:id", cors(), authenticate, controller.commentController
 router.delete("/post/:id", cors(), authenticate, controller.postController.deletePost)
 router.put("/comment/:id", cors(), authenticate, controller.commentController.updateComment)
 router.put("/post/:id", cors(), authenticate, controller.postController.updatePost)
+router.get("/unpublished", cors(), authenticate, controller.postController.getUnpublished)
 
 module.exports = router;

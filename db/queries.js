@@ -54,6 +54,28 @@ async function getPosts() {
   return posts
 }
 
+async function getUnpublished() {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+      comments: {
+        include: {
+          author :{
+            select: {
+              username: true,
+            },
+          },
+        },
+      },
+    },
+  })
+  return posts
+}
+
 async function postPost(authorId, title, content) {
   await prisma.post.create({
     data: {
@@ -133,4 +155,4 @@ async function getComment(id) {
 }
 
 
-module.exports = {createUser, getUser, getPosts, postPost, grantAdmin, createComment, publishPost, deleteComment, deletePost, updateComment, updatePost, getComment}
+module.exports = {createUser, getUser, getPosts, postPost, grantAdmin, createComment, publishPost, deleteComment, deletePost, updateComment, updatePost, getComment, getUnpublished}

@@ -9,7 +9,7 @@ const protectedRoute = (req,res) => {
 }
 const getPosts = async (req, res) => {
   const posts = await db.getPosts();
-  return res.json(posts)
+  return res.json({posts:posts})
 }
 const postPost = async (req, res) => {
   if (req.user.admin){
@@ -17,6 +17,14 @@ const postPost = async (req, res) => {
     return res.status(200).json({message: "post created"})
   } else {
     return res.status(403).json({message: "You do not have persmission to create posts"})
+  }
+}
+const getUnpublished = async (req, res) => {
+  if (req.user.admin){
+    const posts = await db.getUnpublished();
+    return res.json(posts)
+  } else {
+    return res.status(403).json({message: "You do not have persmission to see unpublished posts"})
   }
 }
 const publishPost = async (req, res) => {
@@ -44,4 +52,4 @@ const updatePost = async (req, res) => {
   }
 }
 
-module.exports = {indexRoute, protectedRoute, getPosts, postPost, publishPost, deletePost, updatePost}
+module.exports = {indexRoute, protectedRoute, getPosts, postPost, publishPost, deletePost, updatePost, getUnpublished}

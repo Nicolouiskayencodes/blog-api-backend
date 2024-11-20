@@ -25,10 +25,11 @@ const login = async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (match) {
     const token = jwt.sign(user, process.env.JWT_KEY, { expiresIn: '24h' }) 
-
+    user.password = null
     return( res.status(200).json({
       message: "Auth Passed",
-        token
+        token,
+        user
       })
     );
     

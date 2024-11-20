@@ -20,7 +20,7 @@ const deleteComment = async (req, res) => {
 
 const updateComment = async (req, res) => {
   const comment = await db.getComment(parseInt(req.params.id));
-  if (req.user.id === comment.authorId) {
+  if (req.user.id === comment.authorId || req.user.admin === true) {
     await db.updateComment(parseInt(req.params.id), req.body.content)
   return res.status(200).json({message: "Comment updated"})
   } else {
